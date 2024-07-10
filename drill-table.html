@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <title>Drell Table</title>
+        <link href="css/drill-table.css" rel="stylesheet" type="text/css" />
+    </head>
+    <body>
+        <h1 class="NoPrint">Drill Table</h1>
+        <div class="NoPrint" >
+            <form action="#" id="table-creation-form">
+                <div>
+                    <label for="operation-select">Operation:</label>
+                    <select id="operation-select" name="operation" required>
+                        <option value="addition">Addition</option>
+                        <!-- <option value="division">Division</option> -->
+                        <!-- <option value="exponentiation">Exponentiation</option> -->
+                        <!-- <option value="logarithm">Logarithm</option> -->
+                        <option value="multiplication">Multiplication</option>
+                        <!-- <option value="subtraction">Subtraction</option> -->
+                    </select>
+                </div>
+                <div>
+                    <label for="min-x-input">Top value range:</label>
+                    <input id="min-x-input" min="1" name="minXValue" required type="number" value="1" />
+                    <span>to</span>
+                    <input id="max-x-input" min="1" name="maxXValue" required type="number" value="9" />
+                </div>
+                <div>
+                    <label for="min-y-input">Side value range:</label>
+                    <input id="min-y-input" min="1" name="minYValue" required type="number" value="1" />
+                    <span>to</span>
+                    <input id="max-y-input" min="1" name="maxYValue" required type="number" value="9" />
+                </div>
+                <div>
+                    <button id="create-button" type="button">Create table</button>
+                </div>
+            </form>
+        </div>
+        <hr class="NoPrint" />
+        <div>
+            <table id="table">
+                <caption id="table-caption" />
+                <thead id="table-header">
+                    <tr id="table-header-row" />
+                </thead>
+                <tbody id="table-body" />
+            </table>
+        </div>
+        <script src="https://code.jquery.com/jquery-3.7.1.slim.min.js"
+                integrity="sha256-kmHvs0B+OpCW5GVHUNjv9rOmY0IvSIRcf7zGUDTDQM8="
+                crossorigin="anonymous"
+                type="application/javascript">
+        </script>
+        <script src="js/drill-table.js"
+                type="application/javascript">
+        </script>
+        <script type="application/javascript">
+         $(document).ready(
+             function() {
+                 $("#create-button").on(
+                     { "click": function()
+                         {
+                             let userData = $("#table-creation-form").serializeArray();
+                             let fieldValues = {};
+                             $.each(
+                                 userData,
+                                 function (i, field)
+                                 {
+                                     fieldValues[field.name] = field.value;
+                                 }
+                             );
+                             let xValues = generateAxisValues(
+                                 parseInt(fieldValues["minXValue"]),
+                                 parseInt(fieldValues["maxXValue"])
+                             );
+                             console.debug("xValues=" + xValues);
+
+                             let yValues = generateAxisValues(
+                                 parseInt(fieldValues["minYValue"]),
+                                 parseInt(fieldValues["maxYValue"])
+                             );
+                             console.debug("yValues=" + yValues);
+
+                             let operation = operations[fieldValues["operation"]];
+                             let $caption = $("#table-caption");
+
+                             // Clear the Table
+                             let $table = $("#table");
+                             $table.find("th").remove();
+                             $table.find("td").remove();
+                             $caption.html("");
+
+                             // Table caption
+                             $caption.html("Drill table for " + fieldValues["operation"] + ".");
+
+                             // Table header
+                             let $tHeadRow = $("#table-header-row");
+                             $tHeadRow.append(
+                                 $(
+                                     "<th/>",
+                                     { class: "MathematicalOperation"
+                                     , html: operation.symbol
+                                     }
+                                 )
+                             );
+                             $.each(
+                                 xValues,
+                                 function (i, x)
+                                 {
+                                     let $header = $(
+                                         "<th/>",
+                                         { html: x
+                                         }
+                                     );
+                                     $tHeadRow.append($header);
+                                 }
+                             );
+
+                             // Table body
+                             let $tBody = $("#table-body");
+                             $.each(
+                                 yValues,
+                                 function (i, y)
+                                 {
+                                     let $row = $("<tr/>");
+                                     let $valueCell = $(
+                                         "<th/>",
+                                         { html: y
+                                         }
+                                     );
+                                     $row.append($valueCell);
+
+                                     // Fill in each remaining cell.
+                                     $.each(
+                                         xValues,
+                                         function (i, x)
+                                         {
+                                             let $cell = $(
+                                                 "<td/>",
+                                                 { html: operation.render(x, y)
+                                                 }
+                                             );
+                                             $row.append($cell);
+                                         }
+                                     );
+
+                                     $tBody.append($row);
+                                 }
+                             );
+                         }
+                     }
+                 );
+             }
+         );
+        </script>
+    </body>
+</html>
