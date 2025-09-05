@@ -1,27 +1,38 @@
-# Math Drill #
+# sv
 
-Currently, this is just an attempt to generate addition and multiplication table
-drill sheets. The idea is to provide something which can be printed, and my kid
-can use for learning. However, creating an interactive table for use on a tablet
-or mobile phone could be nice too... so maybe later.
+Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
 
+## Creating a project
 
-## Usage ##
+If you're seeing this, you've probably already done this step. Congrats!
 
-Just clone or download the project, and open `drill-table.html` in a web
-browser. Specify the range of numbers to be used in the table, and click
-the button to create the table.
+```sh
+# create a new project in the current directory
+npx sv create
 
-Printing the page will print only the table, not the generation form.
+# create a new project in my-app
+npx sv create my-app
+```
 
+## Developing
 
-## Future Enhancements ##
+Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
 
-Maybe in the future, if it's worthwhile, the generated table can be used
-interactively. For example, a kid presses each table cell to see the correct
-value.
+```sh
+npm run dev
 
-The table generation could maybe be easier with some kind of click-and-pull
-behavior to size the table.
+# or start the server and open the app in a new browser tab
+npm run dev -- --open
+```
 
-For now, though, it suits my minimum needs.
+## Building
+
+To create a production version of your app:
+
+```sh
+npm run build
+```
+
+You can preview the production build with `npm run preview`.
+
+> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
